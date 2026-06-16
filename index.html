@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SolarConnect — Admin Portal</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="logo-icon">☀️</div>
+    SolarConnect
+  </a>
+  <div class="nav-links">
+    <button class="nav-link active" data-page="dashboard">
+      <span class="icon">📊</span> Dashboard
+    </button>
+    <button class="nav-link" data-page="beneficiaries">
+      <span class="icon">👥</span> Beneficiaries
+    </button>
+    <button class="nav-link" data-page="kits">
+      <span class="icon">⚡</span> Solar Kits
+    </button>
+    <button class="nav-link" data-page="payments">
+      <span class="icon">💳</span> Payments
+    </button>
+    <button class="nav-link" data-page="reports">
+      <span class="icon">📋</span> Reports
+    </button>
+  </div>
+  <div class="nav-right">
+    <button class="notif-btn" title="Notifications">
+      🔔 <span class="notif-badge">3</span>
+    </button>
+    <div class="avatar" title="Admin">A</div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE: DASHBOARD
+═══════════════════════════════════════════════════════ -->
+<div class="page active" id="page-dashboard">
+
+  <!-- Welcome Banner -->
+  <div class="welcome-banner">
+    <div>
+      <h2>Good morning, Admin 👋</h2>
+      <p>Here's your SolarConnect overview — Monday, 2 June 2026</p>
+    </div>
+    <div class="banner-right">
+      <div class="banner-stat"><div class="val">92%</div><div class="lbl">Collection Rate</div></div>
+      <div class="banner-stat"><div class="val">76%</div><div class="lbl">Avg Battery</div></div>
+      <div class="banner-stat"><div class="val">137</div><div class="lbl">Fully Operational</div></div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <button class="btn btn-primary" onclick="setActive('beneficiaries');renderCurrentPage('beneficiaries');setTimeout(()=>document.getElementById('btn-register').click(),100)">
+      ➕ Register Beneficiary
+    </button>
+    <button class="btn btn-gold" id="btn-pay-dash">💳 Record Payment</button>
+    <button class="btn btn-secondary" onclick="setActive('kits');renderCurrentPage('kits')">🔧 View Kits</button>
+    <button class="btn btn-secondary" onclick="setActive('reports');renderCurrentPage('reports')">📥 Download Report</button>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-label">⚡ Active Kits</div>
+      <div class="metric-value">148</div>
+      <div class="metric-sub">↑ 12 this month</div>
+    </div>
+    <div class="metric-card teal">
+      <div class="metric-label">👥 Beneficiaries</div>
+      <div class="metric-value">312</div>
+      <div class="metric-sub">↑ 28 this month</div>
+    </div>
+    <div class="metric-card gold">
+      <div class="metric-label">☀️ Energy Generated (kWh)</div>
+      <div class="metric-value">4,820</div>
+      <div class="metric-sub">↑ 8% vs last month</div>
+    </div>
+    <div class="metric-card blue">
+      <div class="metric-label">💰 Revenue Collected</div>
+      <div class="metric-value">₹2.4L</div>
+      <div class="metric-sub">92% collection rate</div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-row">
+    <div class="card">
+      <div class="section-header">
+        <div>
+          <div class="section-title">⚡ Energy Generated — Last 7 Days</div>
+          <div class="section-sub">Daily kWh output across all active kits</div>
+        </div>
+      </div>
+      <div id="bar-chart" class="bar-chart-wrap"></div>
+    </div>
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">🔋 Battery Health Distribution</div>
+      </div>
+      <div id="battery-donut"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Row -->
+  <div class="bottom-row">
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">🕐 Recent Activity</div>
+      </div>
+      <div id="activity-list" class="activity-list"></div>
+    </div>
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">💳 Payment Collection by District</div>
+      </div>
+      <div id="pay-progress" class="pay-progress-list"></div>
+    </div>
+  </div>
+
+  <!-- Critical Alerts -->
+  <div class="alert alert-warn">
+    ⚠️ <strong>11 kits</strong> have critically low battery and need immediate maintenance.
+    <button class="btn btn-sm btn-secondary" style="margin-left:auto"
+      onclick="setActive('kits');renderCurrentPage('kits')">View Kits →</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE: BENEFICIARIES
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-beneficiaries">
+  <div class="page-header">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1>Beneficiary Management</h1>
+        <p id="ben-count">8 registered beneficiaries</p>
+      </div>
+      <button id="btn-register" class="btn btn-primary">➕ Register New</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-controls">
+      <div class="search-box">
+        🔍 <input id="ben-search" placeholder="Search by name, ID or location…"/>
+      </div>
+      <select id="ben-status" class="filter-select">
+        <option value="all">All Status</option>
+        <option value="uptodate">Up to date</option>
+        <option value="duesoon">Due soon</option>
+        <option value="overdue">Overdue</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Beneficiary</th>
+            <th>Kit ID</th>
+            <th>Location</th>
+            <th>Joined</th>
+            <th>Payment</th>
+            <th>Kit Health</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="ben-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE: SOLAR KITS
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-kits">
+  <div class="page-header">
+    <h1>Solar Kit Monitoring</h1>
+    <p>148 active kits · 11 critical · 27 fair</p>
+  </div>
+
+  <div class="alert alert-warn">
+    ⚠️ <strong>11 kits</strong> have critically low battery and need immediate maintenance attention.
+  </div>
+
+  <div class="kits-grid">
+    <div class="metric-card">
+      <div class="metric-label">🔋 Avg Battery Health</div>
+      <div class="metric-value">76%</div>
+      <div class="metric-sub">Across all 148 kits</div>
+    </div>
+    <div class="metric-card gold">
+      <div class="metric-label">☀️ Today's Generation</div>
+      <div class="metric-value">682 kWh</div>
+      <div class="metric-sub">↑ 4% vs yesterday</div>
+    </div>
+    <div class="metric-card" style="--before-bg:var(--red)">
+      <div class="metric-label" style="color:var(--red)">🔧 Need Maintenance</div>
+      <div class="metric-value" style="color:var(--red)">11</div>
+      <div class="metric-sub warn">Requires immediate action</div>
+    </div>
+    <div class="metric-card teal">
+      <div class="metric-label">✅ Fully Operational</div>
+      <div class="metric-value">137</div>
+      <div class="metric-sub">92.6% of fleet</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-header">
+      <div class="section-title">⚠️ All Kits</div>
+    </div>
+    <div class="table-controls">
+      <div class="search-box">🔍 <input id="kits-search" placeholder="Search kit ID or beneficiary…"/></div>
+      <select id="kits-status-filter" class="filter-select">
+        <option value="all">All Status</option>
+        <option value="critical">Critical</option>
+        <option value="warn">Warning</option>
+        <option value="info">Info</option>
+        <option value="ok">OK</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kit ID</th><th>Beneficiary</th><th>Location</th>
+            <th>Battery</th><th>Last Reading</th><th>Issue</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="kits-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE: PAYMENTS
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-payments">
+  <div class="page-header">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1>Payments</h1>
+        <p>Total collected: <strong id="pay-total">—</strong></p>
+      </div>
+      <button id="btn-pay" class="btn btn-primary">💳 Record Payment</button>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    ℹ️ <strong>2 beneficiaries</strong> have overdue payments. <a href="#" onclick="document.getElementById('pay-status-filter').value='overdue';renderPaymentsTable('','overdue');" style="color:inherit;font-weight:600;">View overdue →</a>
+  </div>
+
+  <div class="card">
+    <div class="table-controls">
+      <div class="search-box">🔍 <input id="pay-search" placeholder="Search by name, ID or kit…"/></div>
+      <select id="pay-status-filter" class="filter-select">
+        <option value="all">All Status</option>
+        <option value="collected">Collected</option>
+        <option value="pending">Pending</option>
+        <option value="overdue">Overdue</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Payment ID</th><th>Beneficiary</th><th>Kit ID</th>
+            <th>Amount</th><th>Date</th><th>Method</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="pay-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE: REPORTS
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-reports">
+  <div class="page-header">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1>Reports & Impact</h1>
+        <p>Data as of June 2026 · Uttar Pradesh, India</p>
+      </div>
+      <button id="download-report" class="btn btn-primary">📥 Download CSV</button>
+    </div>
+  </div>
+
+  <!-- Impact Cards -->
+  <div class="impact-grid">
+    <div class="impact-card">
+      <div class="impact-icon">👥</div>
+      <div class="impact-val">312</div>
+      <div class="impact-lbl">Beneficiaries Served</div>
+    </div>
+    <div class="impact-card gold-bg">
+      <div class="impact-icon">☀️</div>
+      <div class="impact-val">4,820</div>
+      <div class="impact-lbl">kWh Generated (Month)</div>
+    </div>
+    <div class="impact-card teal-bg">
+      <div class="impact-icon">🌱</div>
+      <div class="impact-val">3.4 t</div>
+      <div class="impact-lbl">CO₂ Offset (est.)</div>
+    </div>
+    <div class="impact-card blue-bg">
+      <div class="impact-icon">💰</div>
+      <div class="impact-val">₹2.4L</div>
+      <div class="impact-lbl">Revenue Collected</div>
+    </div>
+  </div>
+
+  <!-- Growth Chart -->
+  <div class="two-col">
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">📈 Energy Growth — Jan–Jun 2026</div>
+      </div>
+      <div id="growth-chart"></div>
+    </div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:16px">🏆 Key Highlights</div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="act-icon green">📈</div>
+          <div class="act-text">
+            <div class="act-title">27% Growth in Beneficiaries</div>
+            <div class="act-desc">Since January 2026</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="act-icon gold">☀️</div>
+          <div class="act-text">
+            <div class="act-title">4,820 kWh This Month</div>
+            <div class="act-desc">8% increase over last month</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="act-icon green">💳</div>
+          <div class="act-text">
+            <div class="act-title">92% Payment Collection</div>
+            <div class="act-desc">Best rate in 6 months</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="act-icon blue">🌱</div>
+          <div class="act-text">
+            <div class="act-title">3.4 Tonnes CO₂ Offset</div>
+            <div class="act-desc">Environmental impact this month</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- District Table -->
+  <div class="card">
+    <div class="section-header">
+      <div class="section-title">📍 District-wise Breakdown</div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>District</th><th>Kits</th><th>Beneficiaries</th>
+            <th>Energy (Month)</th><th>Collection</th><th>Rate</th>
+          </tr>
+        </thead>
+        <tbody id="district-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     MODALS
+═══════════════════════════════════════════════════════ -->
+
+<!-- Register Beneficiary -->
+<div class="modal-overlay" id="modal-register">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Register New Beneficiary</div>
+      <button class="modal-close" onclick="closeModal('modal-register')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="register-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input name="rName" placeholder="e.g. Meena Devi" required/>
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input name="rPhone" type="tel" placeholder="10-digit mobile" required/>
+          </div>
+          <div class="form-group">
+            <label>Village / Town *</label>
+            <input name="rLocation" placeholder="e.g. Meerut" required/>
+          </div>
+          <div class="form-group">
+            <label>District</label>
+            <select name="rDistrict">
+              <option>Meerut</option>
+              <option>Muzaffarnagar</option>
+              <option>Hapur</option>
+              <option>Ghaziabad</option>
+              <option>Noida</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Subscription Plan *</label>
+            <select name="rPlan">
+              <option value="₹199/mo">Basic — ₹199/mo</option>
+              <option value="₹299/mo">Standard — ₹299/mo</option>
+              <option value="₹499/mo" selected>Premium — ₹499/mo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Kit Size</label>
+            <select name="rKit">
+              <option>50W (Basic)</option>
+              <option selected>100W (Standard)</option>
+              <option>200W (Premium)</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Notes</label>
+            <textarea name="rNotes" placeholder="Any special instructions or notes…"></textarea>
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-register')">Cancel</button>
+          <button type="submit" class="btn btn-primary">✅ Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Record Payment -->
+<div class="modal-overlay" id="modal-pay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Record Payment</div>
+      <button class="modal-close" onclick="closeModal('modal-pay')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="pay-form">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Beneficiary *</label>
+            <select id="pBen" name="pBen" required>
+              <option value="">Select beneficiary…</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Amount (₹) *</label>
+            <input name="pAmount" type="number" min="1" placeholder="e.g. 499" required/>
+          </div>
+          <div class="form-group">
+            <label>Payment Method *</label>
+            <select name="pMethod">
+              <option>UPI</option>
+              <option>Cash</option>
+              <option>Bank Transfer</option>
+              <option>Cheque</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Payment Date</label>
+            <input name="pDate" type="date"/>
+          </div>
+          <div class="form-group">
+            <label>Reference / UTR</label>
+            <input name="pRef" placeholder="Optional"/>
+          </div>
+          <div class="form-group full">
+            <label>Notes</label>
+            <textarea name="pNotes" placeholder="Any notes about this payment…"></textarea>
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-pay')">Cancel</button>
+          <button type="submit" class="btn btn-primary">💳 Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- View Beneficiary -->
+<div class="modal-overlay" id="modal-view-ben">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="view-ben-name">—</div>
+      <button class="modal-close" onclick="closeModal('modal-view-ben')">✕</button>
+    </div>
+    <div class="modal-body" id="view-ben-details"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-view-ben')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
