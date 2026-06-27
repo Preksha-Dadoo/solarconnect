@@ -2,48 +2,136 @@
    SolarConnect — app.js
    ============================================================ */
 
+const today = new Date();
+
+document.getElementById("today").innerText =
+    today.toLocaleDateString("en-IN", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+
+
 // ── STATE ──────────────────────────────────────────────────
 const state = {
     beneficiaries: [
-        { id: 'BEN-0312', name: 'Meena Devi', kitId: 'SC-0148', location: 'Meerut, UP', joined: '2026-06-02', payment: 'uptodate', kitHealth: 'Good', phone: '9876543210', plan: '₹499/mo' },
-        { id: 'BEN-0201', name: 'Ramesh Kumar', kitId: 'SC-0092', location: 'Muzaffarnagar, UP', joined: '2026-03-15', payment: 'uptodate', kitHealth: 'Critical', phone: '9812345678', plan: '₹499/mo' },
-        { id: 'BEN-0198', name: 'Sunita Verma', kitId: 'SC-0031', location: 'Ghaziabad, UP', joined: '2026-02-10', payment: 'duesoon', kitHealth: 'Good', phone: '9900112233', plan: '₹299/mo' },
-        { id: 'BEN-0145', name: 'Anita Sharma', kitId: 'SC-0067', location: 'Hapur, UP', joined: '2026-01-05', payment: 'overdue', kitHealth: 'Fair', phone: '9988776655', plan: '₹299/mo' },
-        { id: 'BEN-0088', name: 'Mohan Lal', kitId: 'SC-0012', location: 'Meerut, UP', joined: '2025-11-20', payment: 'uptodate', kitHealth: 'Good', phone: '9876001234', plan: '₹499/mo' },
-        { id: 'BEN-0075', name: 'Priya Singh', kitId: 'SC-0041', location: 'Hapur, UP', joined: '2025-10-14', payment: 'duesoon', kitHealth: 'Fair', phone: '9090909090', plan: '₹199/mo' },
-        { id: 'BEN-0060', name: 'Vijay Gupta', kitId: 'SC-0021', location: 'Noida, UP', joined: '2025-09-01', payment: 'uptodate', kitHealth: 'Good', phone: '9345678901', plan: '₹499/mo' },
-        { id: 'BEN-0044', name: 'Kavita Yadav', kitId: 'SC-0009', location: 'Meerut, UP', joined: '2025-07-18', payment: 'overdue', kitHealth: 'Good', phone: '9123456780', plan: '₹299/mo' },
+        { id: 'BEN-0001', name: 'Ramesh Kumar, Juice Stall', kitId: 'SC-AG-001', location: 'Kamla Nagar, Agra', joined: '2026-06-02', payment: 'uptodate', kitHealth: 'Good', phone: '9876543210', plan: 'Solar Lantern, ₹120/month' },
+        { id: 'BEN-0002', name: 'Sanjay Kumar, Tea Vendor', kitId: 'SC-AG-002', location: 'Dayalbagh, Agra', joined: '2026-03-15', payment: 'uptodate', kitHealth: 'Critical', phone: '9812345678', plan: 'Street Vendor Kit, ₹450/month' },
+        { id: 'BEN-0003', name: 'Savitri Devi, Home Business', kitId: 'SC-AG-003', location: 'Sikandra, Agra', joined: '2026-02-10', payment: 'duesoon', kitHealth: 'Good', phone: '9900112233', plan: 'Home Light Kit, ₹250/month' },
+        { id: 'BEN-0004', name: 'Mohan Lal, Fruit Seller', kitId: 'SC-AG-004', location: 'Bichpuri Road, Agra', joined: '2026-01-05', payment: 'overdue', kitHealth: 'Fair', phone: '9988776655', plan: 'Street Vendor Kit, ₹450/month' },
+        { id: 'BEN-0005', name: 'Rafiq Khan, Street Vendor', kitId: 'SC-AG-005', location: 'Patholi, Agra', joined: '2025-11-20', payment: 'uptodate', kitHealth: 'Good', phone: '9876001234', plan: 'Shop Kit, ₹650/month' },
+        { id: 'BEN-0006', name: 'Pooja Devi, Tailoring', kitId: 'SC-AG-006', location: 'Patholi, Agra', joined: '2025-10-14', payment: 'duesoon', kitHealth: 'Fair', phone: '9090909090', plan: 'Home Light Kit, ₹250/month' },
     ],
 
     kits: [
-        { id: 'SC-0092', ben: 'Ramesh Kumar', loc: 'Muzaffarnagar', battery: 15, lastRead: '2 hrs ago', issue: 'Critical Battery', status: 'critical' },
-        { id: 'SC-0041', ben: 'Priya Singh', loc: 'Hapur', battery: 28, lastRead: '4 hrs ago', issue: 'Low Battery', status: 'warn' },
-        { id: 'SC-0031', ben: 'Sunita Verma', loc: 'Ghaziabad', battery: 34, lastRead: '1 hr ago', issue: 'Low Battery', status: 'warn' },
-        { id: 'SC-0067', ben: 'Anita Sharma', loc: 'Hapur', battery: 68, lastRead: '30 min ago', issue: 'Payment Overdue', status: 'info' },
-        { id: 'SC-0148', ben: 'Meena Devi', loc: 'Meerut', battery: 91, lastRead: '12 min ago', issue: '—', status: 'ok' },
-        { id: 'SC-0012', ben: 'Mohan Lal', loc: 'Meerut', battery: 82, lastRead: '45 min ago', issue: '—', status: 'ok' },
-        { id: 'SC-0021', ben: 'Vijay Gupta', loc: 'Noida', battery: 77, lastRead: '20 min ago', issue: '—', status: 'ok' },
-        { id: 'SC-0009', ben: 'Kavita Yadav', loc: 'Meerut', battery: 55, lastRead: '1 hr ago', issue: 'Payment Overdue', status: 'info' },
+        {
+            id: 'SC-AG-001',
+            ben: 'Ramesh Kumar',
+            loc: 'Kamla Nagar',
+            battery: 94,
+            panel: '100W Mono Solar Panel',
+            batteryType: '30Ah LiFePO4',
+            led: '30W Philips LED',
+            controller: 'MPPT',
+            warranty: '5 Years',
+            status: 'ok',
+            issue: "—",
+            lastRead: "27 Jun 2026"
+        },
+
+        {
+            id: 'SC-AG-002',
+            ben: 'Sanjay Kumar',
+            loc: 'Dayalbagh',
+            battery: 94,
+            panel: '100W Mono Solar Panel',
+            batteryType: '30Ah LiFePO4',
+            led: '30W Philips LED',
+            controller: 'MPPT',
+            warranty: '5 Years',
+            status: 'ok',
+            issue: "—",
+            lastRead: "27 Jun 2026"
+        },
+
+        {
+            id: 'SC-AG-003',
+            ben: 'Savitri Devi',
+            loc: 'Sikandra',
+            battery: 94,
+            panel: '100W Mono Solar Panel',
+            batteryType: '30Ah LiFePO4',
+            led: '30W Philips LED',
+            controller: 'MPPT',
+            warranty: '5 Years',
+            status: 'ok',
+            issue: "—",
+            lastRead: "27 Jun 2026"
+        },
+
+        {
+            id: 'SC-AG-004',
+            ben: 'Mohan Lal',
+            loc: 'Bichpuri Road',
+            battery: 94,
+            panel: '100W Mono Solar Panel',
+            batteryType: '30Ah LiFePO4',
+            led: '30W Philips LED',
+            controller: 'MPPT',
+            warranty: '5 Years',
+            status: 'ok',
+            issue: "—",
+            lastRead: "27 Jun 2026"
+        },
+
+        {
+            id: 'SC-AG-005',
+            ben: 'Rafiq Khan',
+            loc: 'Patholi',
+            battery: 94,
+            panel: '100W Mono Solar Panel',
+            batteryType: '30Ah LiFePO4',
+            led: '30W Philips LED',
+            controller: 'MPPT',
+            warranty: '5 Years',
+            status: 'ok',
+            issue: "—",
+            lastRead: "27 Jun 2026"
+        },
+
+        {
+            id: 'SC-AG-006',
+            ben: 'Pooja Devi',
+            loc: 'Patholi',
+            battery: 94,
+            panel: '100W Mono Solar Panel',
+            batteryType: '30Ah LiFePO4',
+            led: '30W Philips LED',
+            controller: 'MPPT',
+            warranty: '5 Years',
+            status: 'ok',
+            issue: "—",
+            lastRead: "27 Jun 2026"
+        }
     ],
 
     payments: [
-        { id: 'PAY-1041', ben: 'Meena Devi', kitId: 'SC-0148', amount: 499, date: '2026-06-01', method: 'UPI', status: 'collected' },
-        { id: 'PAY-1040', ben: 'Ramesh Kumar', kitId: 'SC-0092', amount: 499, date: '2026-06-01', method: 'Cash', status: 'collected' },
-        { id: 'PAY-1039', ben: 'Mohan Lal', kitId: 'SC-0012', amount: 499, date: '2026-05-30', method: 'Bank', status: 'collected' },
-        { id: 'PAY-1038', ben: 'Vijay Gupta', kitId: 'SC-0021', amount: 499, date: '2026-05-28', method: 'UPI', status: 'collected' },
-        { id: 'PAY-1037', ben: 'Sunita Verma', kitId: 'SC-0031', amount: 299, date: '2026-05-25', method: 'UPI', status: 'pending' },
-        { id: 'PAY-1036', ben: 'Priya Singh', kitId: 'SC-0041', amount: 199, date: '2026-05-20', method: '—', status: 'pending' },
-        { id: 'PAY-1035', ben: 'Anita Sharma', kitId: 'SC-0067', amount: 299, date: '2026-05-10', method: '—', status: 'overdue' },
-        { id: 'PAY-1034', ben: 'Kavita Yadav', kitId: 'SC-0009', amount: 299, date: '2026-05-05', method: '—', status: 'overdue' },
+        { id: 'PAY-1041', ben: 'Sanjay Kumar, Tea Vendor', kitId: 'SC-AG-002', amount: 450, date: '2026-06-01', method: 'UPI', status: 'collected' },
+        { id: 'PAY-1040', ben: 'Pooja Devi, Tailoring', kitId: 'SC-AG-006', amount: 250, date: '2026-06-01', method: 'Cash', status: 'collected' },
+        { id: 'PAY-1039', ben: 'Rafiq Khan, Street Vendor', kitId: 'SC-AG-005', amount: 650, date: '2026-05-30', method: 'Bank', status: 'collected' },
+        { id: 'PAY-1038', ben: 'Mohan Lal, Fruit Seller', kitId: 'SC-AG-004', amount: 450, date: '2026-05-28', method: 'UPI', status: 'collected' },
+        { id: 'PAY-1037', ben: 'Savitri Devi, Home Business', kitId: 'SC-AG-003', amount: 250, date: '2026-05-25', method: 'UPI', status: 'pending' },
+        { id: 'PAY-1036', ben: 'Ramesh Kumar, Juice Stall', kitId: 'SC-AG-001', amount: 120, date: '2026-05-20', method: '—', status: 'pending' },
     ],
 
     activities: [
-        { icon: '👩', type: 'green', title: 'New Beneficiary Registered', desc: 'Meena Devi — Meerut, UP', time: 'Today, 7:10 AM' },
-        { icon: '⚡', type: 'gold', title: 'Critical Battery Alert', desc: 'SC-0092 (Ramesh Kumar) — 15%', time: 'Today, 6:45 AM' },
-        { icon: '💳', type: 'blue', title: 'Payment Collected', desc: 'Mohan Lal — ₹499 via UPI', time: 'Yesterday' },
-        { icon: '🔧', type: 'red', title: 'Maintenance Scheduled', desc: 'SC-0041 (Priya Singh) — Hapur', time: 'Yesterday' },
-        { icon: '📊', type: 'green', title: 'Monthly Report Generated', desc: 'May 2026 Impact Report', time: 'Jun 1, 2026' },
-        { icon: '💳', type: 'blue', title: 'Payment Collected', desc: 'Vijay Gupta — ₹499 via UPI', time: 'May 28, 2026' },
+        { icon: '👩', type: 'green', title: 'New Beneficiary Registered', desc: 'SC-AG-002 (Sanjay Kumar, Tea Vendor — Dayalbagh, Agra)', time: 'Today, 7:10 AM' },
+        { icon: '⚡', type: 'gold', title: 'Critical Battery Alert', desc: 'SC-AG-001 (Ramesh Kumar, Juice Stall - Kamla Nagar, Agra) — 15%', time: 'Today, 8:45 AM' },
+        { icon: '💳', type: 'blue', title: 'Payment Collected', desc: 'SC-AG-004 (Mohan Lal, Fruit Seller, Bichpuri Road) — ₹450 via UPI', time: 'Yesterday' },
+        { icon: '🔧', type: 'red', title: 'Maintenance Scheduled', desc: 'SC-AG-003 (Savitri Devi, Home Business) — Sikandra, Agra', time: 'Yesterday' },
+        { icon: '📊', type: 'green', title: 'Monthly Report Generated', desc: 'May 2026 Impact Report', time: 'Jun 20, 2026' },
+        { icon: '💳', type: 'blue', title: 'Payment Collected', desc: 'SC-AG-006 (Pooja Devi, Tailoring - Patholi, Agra) — ₹250 via UPI', time: 'June 28, 2026' },
     ],
 
     nextBenId: 313,
@@ -51,11 +139,21 @@ const state = {
     nextKitId: 149,
 };
 
+localStorage.setItem(
+    "solarconnect",
+    JSON.stringify(state)
+);
+
+state.notifications = []
+state.notifications.unshift(
+    "Payment received"
+)
+
 // ── HELPERS ────────────────────────────────────────────────
 function pad(n, len = 3) { return String(n).padStart(len, '0'); }
-function today() {
-    return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-}
+// function today() {
+//     return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+// }
 function toast(msg, type = 'success') {
     const el = document.getElementById('toast');
     el.textContent = (type === 'success' ? '✅ ' : type === 'error' ? '❌ ' : 'ℹ️ ') + msg;
@@ -66,10 +164,17 @@ function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function setActive(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
     document.getElementById('page-' + page).classList.add('active');
     document.querySelector(`.nav-link[data-page="${page}"]`).classList.add('active');
 }
+const saved =
+    localStorage.getItem("solarconnect");
+
+if (saved) {
+    Object.assign(state, JSON.parse(saved));
+}
+
 
 // ── NAV ────────────────────────────────────────────────────
 document.querySelectorAll('.nav-link[data-page]').forEach(link => {
@@ -80,12 +185,32 @@ document.querySelectorAll('.nav-link[data-page]').forEach(link => {
 });
 
 function renderCurrentPage(page) {
-    if (page === 'dashboard') renderDashboard();
-    if (page === 'beneficiaries') renderBenTable();
-    if (page === 'kits') renderKitsTable();
-    if (page === 'payments') renderPaymentsTable();
-    if (page === 'reports') renderReports();
+
+    switch (page) {
+
+        case "dashboard":
+            renderDashboard();
+            break;
+
+        case "beneficiaries":
+            renderBenTable();
+            break;
+
+        case "kits":
+            renderKitsTable();
+            break;
+
+        case "payments":
+            renderPaymentsTable();
+            break;
+
+        case "reports":
+            renderReports();
+            break;
+    }
+
 }
+
 
 // ── DASHBOARD ──────────────────────────────────────────────
 function renderDashboard() {
@@ -103,17 +228,22 @@ function renderDashboard() {
 
     // Donut
     drawDonut('battery-donut', [
-        { val: 110, color: '#2ECC71', label: 'Good — 110 kits (74%)' },
-        { val: 27, color: '#F5A623', label: 'Fair — 27 kits (18%)' },
-        { val: 11, color: '#E74C3C', label: 'Critical — 11 kits (8%)' },
-    ], 148, 'Kits');
+        { val: 110, color: '#2ECC71', label: 'Excellent — 18 kits (74%)' },
+        { val: 27, color: '#F5A623', label: 'Good — 5 kits (18%)' },
+        { val: 11, color: '#E74C3C', label: 'Need Service — 2 kits (8%)' },
+    ], 25, 'Kits');
+
 
     // Activity
     renderActivity();
 
+
     // Payment progress
     renderPayProgress();
 }
+
+
+
 
 function drawDonut(canvasId, slices, center, label) {
     const svg = document.getElementById(canvasId);
@@ -165,11 +295,11 @@ function renderActivity() {
 
 function renderPayProgress() {
     const groups = [
-        { label: 'Meerut', paid: 6, total: 8, cls: '' },
-        { label: 'Muzaffarnagar', paid: 3, total: 4, cls: '' },
-        { label: 'Hapur', paid: 2, total: 5, cls: 'warn' },
-        { label: 'Ghaziabad', paid: 4, total: 6, cls: '' },
-        { label: 'Noida', paid: 7, total: 7, cls: '' },
+        { label: 'Kamla Nagar', paid: 1, total: 1, cls: '' },
+        { label: 'Dayalbagh', paid: 1, total: 1, cls: '' },
+        { label: 'Sikandra', paid: 1, total: 1, cls: 'warn' },
+        { label: 'Bichpuri Road', paid: 1, total: 1, cls: '' },
+        { label: 'Patholi', paid: 2, total: 2, cls: '' },
     ];
     document.getElementById('pay-progress').innerHTML = groups.map(g => {
         const pct = Math.round(g.paid / g.total * 100);
@@ -230,6 +360,13 @@ function viewBen(id) {
       <div class="form-group"><label>Plan</label><input readonly value="${b.plan}"></div>
       <div class="form-group"><label>Payment Status</label><input readonly value="${b.payment}"></div>
       <div class="form-group"><label>Kit Health</label><input readonly value="${b.kitHealth}"></div>
+       <div class="form-group"><label>Occupation</label><input readonly value="${b.occupation || 'Juice Stall Owner'}"></div>
+      <div class="form-group"><label>Income</label><input readonly value="${b.income || '₹15,000/month'}"></div>
+      <div class="form-group"><label>Aadhar</label><input readonly value="${b.aadhar || 'XXXX-XXXX-1234'}"></div>
+      <div class="form-group"><label>Kit Type</label><input readonly value="${b.kittype || 'Solar Lantern'}"></div>
+      <div class="form-group"><label>Total Payments</label><input readonly value="${b.totalpayments || '₹2,640'}"></div>
+      <div class="form-group"><label>Energy Generated</label><input readonly value="${b.energygenerated || '420 kWh'}"></div>
+    </div>
       <div class="form-group"><label>Joined</label><input readonly value="${b.joined}"></div>
     </div>`;
     openModal('modal-view-ben');
@@ -258,21 +395,43 @@ document.getElementById('register-form')?.addEventListener('submit', e => {
     const loc = f.rLocation.value.trim();
     const phone = f.rPhone.value.trim();
     const plan = f.rPlan.value;
+    const occupation = f.occupation.value;
+    const aadhar = f.aadhar.value;
+    const income = f.income.value;
+    const kittype = f.kittype.value;
+
     if (!name || !loc || !phone) { toast('Please fill all required fields.', 'error'); return; }
 
     const newId = 'BEN-' + pad(state.nextBenId++, 4);
     const kitId = 'SC-' + pad(state.nextKitId++, 4);
-    state.beneficiaries.unshift({
-        id: newId, name, location: loc + ', UP', kitId,
-        joined: new Date().toISOString().slice(0, 10),
-        payment: 'uptodate', kitHealth: 'Good', phone, plan
-    });
+
     state.activities.unshift({
         icon: '👤', type: 'green',
         title: 'New Beneficiary Registered',
         desc: `${name} — ${loc}`,
         time: 'Just now'
     });
+
+    state.beneficiaries.unshift({
+        id: newId,
+        name,
+        location: loc + ", UP",
+        kitId,
+        joined: new Date().toISOString().slice(0, 10),
+        payment: "uptodate",
+        kitHealth: "Good",
+        phone,
+        plan,
+        occupation,
+        aadhar,
+        income,
+        kittype
+    });
+    localStorage.setItem(
+        "solarconnect",
+        JSON.stringify(state)
+    );
+
     f.reset();
     closeModal('modal-register');
     renderBenTable();
@@ -372,7 +531,19 @@ document.getElementById('pay-form')?.addEventListener('submit', e => {
     if (!amount || amount <= 0) { toast('Enter a valid amount.', 'error'); return; }
 
     const newId = 'PAY-' + state.nextPayId++;
-    state.payments.unshift({ id: newId, ben, kitId: b.kitId, amount, date, method, status: 'collected' });
+    state.payments.unshift({
+        id: newId,
+        ben,
+        kitId: b.kitId,
+        amount,
+        date,
+        method,
+        status: "collected"
+    });
+    localStorage.setItem(
+        "solarconnect",
+        JSON.stringify(state)
+    );
     b.payment = 'uptodate';
     state.activities.unshift({ icon: '💳', type: 'blue', title: 'Payment Collected', desc: `${ben} — ₹${amount} via ${method}`, time: 'Just now' });
     f.reset();
@@ -395,6 +566,9 @@ function renderReports() {
     const bens = [260, 270, 282, 295, 305, 312];
     const energy = [3800, 4050, 4200, 4400, 4600, 4820];
     const maxE = Math.max(...energy);
+    const element = document.getElementById("page-reports");
+
+    html2pdf().from(element).save("SolarConnect_Report.pdf");
 
     const chartEl = document.getElementById('growth-chart');
     chartEl.innerHTML = '';
@@ -424,14 +598,43 @@ function renderReports() {
                 <text x="${x.toFixed(1)}" y="${h - 8}" text-anchor="middle" font-size="9" fill="#6B8075">${months[i]}</text>`;
     }).join('')}
     </svg>`;
+    function downloadReport() {
 
+        const element = document.getElementById("page-reports");
+
+        html2pdf()
+
+            .set({
+
+                margin: 0.5,
+
+                filename: "SolarConnect_Report.pdf",
+
+                image: { type: "jpeg", quality: 1 },
+
+                html2canvas: { scale: 2 },
+
+                jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+
+            })
+
+            .from(element)
+
+            .save();
+
+    }
+    function downloadReport() {
+
+        alert("Sample SolarConnect Impact Report downloaded successfully.");
+
+    }
     // District table
     const districts = [
-        { name: 'Meerut', kits: 52, bens: 48, energy: '1820 kWh', collection: '₹24,500', rate: '91%' },
-        { name: 'Muzaffarnagar', kits: 31, bens: 29, energy: '1085 kWh', collection: '₹14,700', rate: '88%' },
-        { name: 'Hapur', kits: 27, bens: 25, energy: '945 kWh', collection: '₹11,200', rate: '79%' },
-        { name: 'Ghaziabad', kits: 22, bens: 20, energy: '770 kWh', collection: '₹9,800', rate: '94%' },
-        { name: 'Noida', kits: 16, bens: 15, energy: '560 kWh', collection: '₹7,500', rate: '97%' },
+        { name: 'Kamla Nagar', kits: 52, bens: 48, energy: '1820 kWh', collection: '₹24,500', rate: '91%' },
+        { name: 'Dayal Bagh', kits: 31, bens: 29, energy: '1085 kWh', collection: '₹14,700', rate: '88%' },
+        { name: 'Sikandra', kits: 27, bens: 25, energy: '945 kWh', collection: '₹11,200', rate: '79%' },
+        { name: 'Bichpuri Road', kits: 22, bens: 20, energy: '770 kWh', collection: '₹9,800', rate: '94%' },
+        { name: 'Patholi', kits: 16, bens: 15, energy: '560 kWh', collection: '₹7,500', rate: '97%' },
     ];
     document.getElementById('district-tbody').innerHTML = districts.map(d => `
     <tr>
@@ -443,15 +646,30 @@ function renderReports() {
       <td><span class="badge badge-green">${d.rate}</span></td>
     </tr>`).join('');
 }
+renderPieChart();
+function renderRevenueChart() {
+
+    const revenue = [
+        5000,
+        8200,
+        7400,
+        9100,
+        11500,
+        13600
+    ];
+
+    // your existing chart code
+
+}
 
 // Download report (CSV mock)
 document.getElementById('download-report')?.addEventListener('click', () => {
     const csv = ['District,Kits,Beneficiaries,Energy,Collection,Rate',
-        'Meerut,52,48,1820 kWh,₹24500,91%',
-        'Muzaffarnagar,31,29,1085 kWh,₹14700,88%',
-        'Hapur,27,25,945 kWh,₹11200,79%',
-        'Ghaziabad,22,20,770 kWh,₹9800,94%',
-        'Noida,16,15,560 kWh,₹7500,97%'].join('\n');
+        'Kamla Nagar,52,48,1820 kWh,₹24500,91%',
+        'Sikandrar,31,29,1085 kWh,₹14700,88%',
+        'Dayalbagh,27,25,945 kWh,₹11200,79%',
+        'Bichpuri Road,22,20,770 kWh,₹9800,94%',
+        'Patholi,16,15,560 kWh,₹7500,97%'].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -475,6 +693,19 @@ document.getElementById('btn-pay-dash')?.addEventListener('click', () => {
     setActive('payments'); renderCurrentPage('payments');
     setTimeout(() => { populatePayBenDropdown(); openModal('modal-pay'); }, 100);
 });
+function toggleNotifications() {
+
+    alert(
+        `Notifications
+
+• 2 Pending Payments
+
+• 1 Battery Alert
+
+• 1 New Beneficiary`
+    );
+
+}
 
 // ── INIT ───────────────────────────────────────────────────
 (function init() {
@@ -483,4 +714,5 @@ document.getElementById('btn-pay-dash')?.addEventListener('click', () => {
     renderKitsTable();
     renderPaymentsTable();
     renderReports();
+    renderRevenueChart();
 })();
